@@ -1,0 +1,13 @@
+{
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Niklas Netter",
+  "copyright_year": "2022",
+  "development_status": "Development Status :: 1 - Planning",
+  "email": "niknett@gmail.com",
+  "friendly_name": "Stardist Stacked Timepoints",
+  "github_user": "gatoniel",
+  "license": "MIT",
+  "package_name": "stardist_stacked_timepoints",
+  "project_name": "stardist-stacked-timepoints",
+  "version": "0.0.0"
+}
