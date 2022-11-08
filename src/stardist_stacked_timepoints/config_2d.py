@@ -30,7 +30,7 @@ class StackedTimepointsConfig2D(BaseConfig):
         """Initialize with fixed length in time direction."""
         super().__init__(
             axes=axes,
-            n_channel_in=len_t * n_channel_in,
+            n_channel_in=n_channel_in,
             n_channel_out=(1 + n_rays) * len_t,
         )
 
@@ -62,10 +62,10 @@ class StackedTimepointsConfig2D(BaseConfig):
 
         # net_mask_shape not needed but kept for legacy reasons
         if backend_channels_last():
-            self.net_input_shape = None, None, self.n_channel_in
+            self.net_input_shape = None, None, self.n_channel_in * self.len_t
             self.net_mask_shape = None, None, 1
         else:
-            self.net_input_shape = self.n_channel_in, None, None
+            self.net_input_shape = self.n_channel_in * self.len_t, None, None
             self.net_mask_shape = 1, None, None
 
         self.train_shape_completion = False

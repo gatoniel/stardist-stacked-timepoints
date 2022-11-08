@@ -143,8 +143,10 @@ class StackedTimepointsData2D(StackedTimepointsDataBase):
             )
             dist_mask = prob
 
+        if xs[0].ndim == 3:
+            xs = [np.expand_dims(x, axis=-1) for x in xs]
         xs = np.stack(
-            [np.stack([x[i] for i in range(self.len_t)], axis=-1) for x in xs]
+            [np.concatenate([x[i] for i in range(self.len_t)], axis=-1) for x in xs]
         )
 
         # subsample wth given grid

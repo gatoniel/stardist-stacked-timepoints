@@ -3,6 +3,7 @@ import os
 from glob import glob
 
 from tifffile import imread
+from tifffile import imwrite
 
 from stardist_stacked_timepoints.config_2d import StackedTimepointsConfig2D
 from stardist_stacked_timepoints.data_2d import StackedTimepointsData2D
@@ -39,8 +40,12 @@ conf = StackedTimepointsConfig2D(
     n_channel_in=1,
     train_patch_size=(32, 32),
     train_batch_size=2,
-    train_epochs=1,
+    train_epochs=100,
 )
 model = StackedTimepointsModel2D(conf, name="model", basedir=path)
 
 history = model.train(X[:val_ind], Y[:val_ind], (X[val_ind:], Y[val_ind:]))
+
+out = model.predict_tyx(X[0])
+
+imwrite(os.path.join(path, "pred_dists.tif"), out[1])
