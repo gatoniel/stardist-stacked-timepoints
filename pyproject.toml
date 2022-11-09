@@ -18,6 +18,7 @@ Changelog = "https://github.com/gatoniel/stardist-stacked-timepoints/releases"
 [tool.poetry.dependencies]
 python = ">=3.8,<3.10"
 stardist = ">=0.7.3,<0.9.0"
+numpy = ">=1.20.0"
 
 [tool.poetry.dev-dependencies]
 Pygments = ">=2.10.0"
@@ -44,7 +45,7 @@ sphinx-click = ">=3.0.2"
 typeguard = ">=2.13.3"
 xdoctest = {extras = ["colors"], version = ">=0.15.10"}
 myst-parser = {version = ">=0.16.1"}
-tensorflow = "^2.10.0"
+tensorflow = "^2.2.0"
 ipython = "^8.6.0"
 
 [tool.poetry.scripts]
