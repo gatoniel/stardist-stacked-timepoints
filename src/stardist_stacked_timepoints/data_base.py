@@ -77,6 +77,10 @@ class StackedTimepointsDataBase(RollingSequence):
             ValueError("Dimensions of patch_size and input images are not compatible.")
         )
 
+        if x_ndim == patch_ndim + 1:
+            xs = [np.expand_dims(x, axis=-1) for x in xs]
+            x_ndim = xs[0].ndim
+
         if isinstance(xs, (np.ndarray, tuple, list)) and isinstance(
             ys, (np.ndarray, tuple, list)
         ):

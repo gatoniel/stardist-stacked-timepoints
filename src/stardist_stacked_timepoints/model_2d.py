@@ -26,10 +26,13 @@ from stardist.models.base import masked_metric_mae
 from stardist.models.base import masked_metric_mse
 from stardist.models.base import weighted_categorical_crossentropy
 from stardist.utils import _is_floatarray
+
+# from stardist.utils import _is_power_of_2
 from tqdm import tqdm
 
 from .config_2d import StackedTimepointsConfig2D
 from .data_2d import StackedTimepointsData2D
+from .predict import timeseries_to_batch
 
 
 K = keras_import("backend")
@@ -637,6 +640,47 @@ class StackedTimepointsModel2D(StarDist2D):
         dists = np.stack(np.split(dists, self.config.len_t, axis=-1), axis=0)
 
         return prob, dists
+
+    def predict_tyx_list(self, xs):
+        """Same as predict_tyx but for list of elements."""
+        return [self.predict_tyx(x) for x in xs]
+
+    def predict_tyx_array(self, x_array):
+        """Predict on TYXC array."""
+        if x_array.ndim == 3:
+            x_array = np.expand_dims(x_array, axis=-1)
+        return self.predict_tyx_list(timeseries_to_batch(x_array, self.config.len_t))
+
+    def _compute_receptive_field(self, img_size=None):
+        """Modified version of original StarDist models."""
+        # TODO: good enough?
+        from scipy.ndimage import zoom
+
+        if img_size is None:
+            img_size = tuple(
+                g * (128 if self.config.n_dim == 2 else 64) for g in self.config.grid
+            )
+        if np.isscalar(img_size):
+            img_size = (img_size,) * self.config.n_dim
+        img_size = tuple(img_size)
+        # print(img_size)
+        # assert all(_is_power_of_2(s) for s in img_size)
+        mid = tuple(s // 2 for s in img_size)
+        x = np.zeros(
+            # MODIFIED
+            (1,) + img_size + (self.config.n_channel_in * self.config.len_t,),
+            dtype=np.float32,
+        )
+        z = np.zeros_like(x)
+        x[(0,) + mid + (slice(None),)] = 1
+        y = self.keras_model.predict(x)[0][0, ..., 0]
+        y0 = self.keras_model.predict(z)[0][0, ..., 0]
+        grid = tuple((np.array(x.shape[1:-1]) / np.array(y.shape)).astype(int))
+        # assert grid == self.config.grid
+        y = zoom(y, grid, order=0)
+        y0 = zoom(y0, grid, order=0)
+        ind = np.where(np.abs(y - y0) > 0)
+        return [(m - np.min(i), np.max(i) - m) for (m, i) in zip(mid, ind)]
 
     @property
     def _config_class(self):
