@@ -1973,14 +1973,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "unittest"
-version = "0.0"
-description = ""
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "urllib3"
 version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -2079,7 +2071,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "436ea36246d239f04b4db0535eb6cb813e0c0f683028097e962f768c66741cf9"
+content-hash = "49ad665a27df06d6ecd582ceff8300382db5a9085dd680f69119ed385e141730"
 
 [metadata.files]
 absl-py = []
@@ -2427,7 +2419,6 @@ typeguard = [
     {file = "typeguard-2.13.3.tar.gz", hash = "sha256:00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4"},
 ]
 typing-extensions = []
-unittest = []
 urllib3 = []
 virtualenv = []
 wcwidth = [
