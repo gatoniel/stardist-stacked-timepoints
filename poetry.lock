@@ -373,6 +373,17 @@ conda = ["pyyaml"]
 pipenv = ["pipenv"]
 
 [[package]]
+name = "edt"
+version = "2.3.0"
+description = "Multi-Label Anisotropic Euclidean Distance Transform 3D"
+category = "main"
+optional = false
+python-versions = "~=3.6"
+
+[package.dependencies]
+numpy = "*"
+
+[[package]]
 name = "exceptiongroup"
 version = "1.0.1"
 description = "Backport of PEP 654 (exception groups)"
@@ -1962,6 +1973,14 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "unittest"
+version = "0.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "urllib3"
 version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -2060,7 +2079,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "0efe0326d8b325beb9a8b1724f8bec04e565556b35c15ff1e7c4ca7ad2c582b0"
+content-hash = "436ea36246d239f04b4db0535eb6cb813e0c0f683028097e962f768c66741cf9"
 
 [metadata.files]
 absl-py = []
@@ -2107,6 +2126,7 @@ decorator = []
 distlib = []
 docutils = []
 dparse = []
+edt = []
 exceptiongroup = []
 executing = []
 filelock = []
@@ -2407,6 +2427,7 @@ typeguard = [
     {file = "typeguard-2.13.3.tar.gz", hash = "sha256:00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4"},
 ]
 typing-extensions = []
+unittest = []
 urllib3 = []
 virtualenv = []
 wcwidth = [

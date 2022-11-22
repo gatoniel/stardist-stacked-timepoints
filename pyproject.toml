@@ -19,6 +19,9 @@ Changelog = "https://github.com/gatoniel/stardist-stacked-timepoints/releases"
 python = ">=3.8,<3.10"
 stardist = ">=0.8.3,<0.9.0"
 numpy = ">=1.20.0"
+edt = "^2.3.0"
+scipy = "^1.9.3"
+unittest = "^0.0"
 
 [tool.poetry.dev-dependencies]
 Pygments = ">=2.10.0"
