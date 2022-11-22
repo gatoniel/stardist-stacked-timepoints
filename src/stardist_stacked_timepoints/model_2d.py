@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import warnings
+from unittest.mock import patch
 
 import numpy as np
 import tensorflow as tf
@@ -31,6 +32,7 @@ from stardist.utils import _is_floatarray
 from tqdm import tqdm
 
 from .config_2d import StackedTimepointsConfig2D
+from .data_2d import OptimizedStarDistData2D
 from .data_2d import StackedTimepointsData2D
 from .predict import timeseries_to_batch
 
@@ -686,3 +688,33 @@ class StackedTimepointsModel2D(StarDist2D):
     def _config_class(self):
         """Needed method for the config class to use."""
         return StackedTimepointsConfig2D
+
+
+class OptimizedStarDist2D(StarDist2D):
+    """Overwrite train method to use different data generator."""
+
+    def train(
+        self,
+        x,
+        y,
+        validation_data,
+        classes="auto",
+        augmenter=None,
+        seed=None,
+        epochs=None,
+        steps_per_epoch=None,
+        workers=1,
+    ):
+        """Monkey patch the original StarDistData2D generator."""
+        with patch("stardist.models.model2d.StarDistData2D", OptimizedStarDistData2D):
+            return super().train(
+                X=x,
+                Y=y,
+                validation_data=validation_data,
+                classes=classes,
+                augmenter=augmenter,
+                seed=seed,
+                epochs=epochs,
+                steps_per_epoch=steps_per_epoch,
+                workers=workers,
+            )
