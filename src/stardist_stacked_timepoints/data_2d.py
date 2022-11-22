@@ -6,6 +6,7 @@ from scipy.ndimage import zoom
 from skimage.segmentation import clear_border
 from stardist.geometry import star_dist
 from stardist.models.model2d import StarDistData2D
+from stardist.sample_patches import sample_patches as sd_sample_patches
 from stardist.utils import edt_prob
 from stardist.utils import mask_to_categorical
 
@@ -177,7 +178,7 @@ class OptimizedStarDistData2D(StarDistData2D):
         """Return batch i as numpy array."""
         idx = self.batch(i)
         arrays = [
-            sample_patches(
+            sd_sample_patches(
                 (self.Y[k],) + self.channels_as_tuple(self.X[k]),
                 patch_size=self.patch_size,
                 n_samples=1,
