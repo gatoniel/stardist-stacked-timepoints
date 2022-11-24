@@ -1,18 +1,58 @@
 """Functions to calculate optimized prob maps and distance weights."""
+import numba
 import numpy as np
+import numpy.typing as npt
 from edt import edt
+from numba import njit
 
 
-def bordering_pixels(lbl):
+@njit
+def determine_neighbor_2d(
+    y: int,
+    off_y: int,
+    x: int,
+    off_x: int,
+    lbl: npt.NDArray[int],
+    mask: npt.NDArray[bool],
+    bordering: npt.NDArray[bool],
+) -> None:
+    """Utility function that is called several times in the below function."""
+    y_ = y + off_y
+    x_ = x + off_x
+    if mask[y_, x_] and lbl[y, x] != lbl[y_, x_]:
+        bordering[y, x] = True
+        bordering[y_, x_] = True
+
+
+@njit
+def bordering_pixels_2d(lbl: npt.NDArray[int]) -> npt.NDArray[bool]:
     """Calculate the pixels of objects that touch other objects."""
-    ids = np.unique(lbl[lbl > 0])
-    edts = np.empty((lbl.shape) + (len(ids),))
-    edts = np.stack([edt(np.logical_not(lbl == i)) for i in ids], axis=-1)
-    sorted_edts = np.sort(edts, axis=-1)
-    return np.logical_and(
-        sorted_edts[..., 0] == 0,  # pixels that are part of some objects
-        sorted_edts[..., 1] < 2,  # pixels that are also bordering at least one object
-    )
+    bordering = np.zeros(lbl.shape, dtype=numba.types.bool_)
+    mask = lbl > 0
+    for y in range(lbl.shape[0] - 1):
+        for x in range(1, lbl.shape[1] - 1):
+            if mask[y, x]:
+                for (off_y, off_x) in [(1, -1), (0, 1), (1, 1), (1, 0)]:
+                    determine_neighbor_2d(y, off_y, x, off_x, lbl, mask, bordering)
+        x = 0
+        if mask[y, x]:
+            for (off_y, off_x) in [(0, 1), (1, 1), (1, 0)]:
+                determine_neighbor_2d(y, off_y, x, off_x, lbl, mask, bordering)
+
+        x = lbl.shape[1] - 1
+        if mask[y, x]:
+            off_y = 1
+            off_x = 0
+            determine_neighbor_2d(y, off_y, x, off_x, lbl, mask, bordering)
+
+    y = lbl.shape[0] - 1
+    for x in range(0, lbl.shape[1] - 1):
+        if mask[y, x]:
+            off_y = 0
+            off_x = 1
+            determine_neighbor_2d(y, off_y, x, off_x, lbl, mask, bordering)
+
+    return bordering
 
 
 def bordering_gaussian_weights(border_pixels, lbl, sigma=2):

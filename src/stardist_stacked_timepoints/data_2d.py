@@ -13,7 +13,7 @@ from stardist.utils import mask_to_categorical
 from .data_base import StackedTimepointsDataBase
 from .sample_patches import sample_patches
 from .utils import bordering_gaussian_weights
-from .utils import bordering_pixels
+from .utils import bordering_pixels_2d
 
 
 class StackedTimepointsData2D(StackedTimepointsDataBase):
@@ -203,7 +203,7 @@ class OptimizedStarDistData2D(StarDistData2D):
 
         _prob = np.stack([edt_prob(lbl[self.b][self.ss_grid[1:3]]) for lbl in ys])
         bordering_map = np.stack(
-            [bordering_pixels(lbl[self.b][self.ss_grid[1:3]]) for lbl in ys]
+            [bordering_pixels_2d(lbl[self.b][self.ss_grid[1:3]]) for lbl in ys]
         )
         prob = np.clip(_prob - bordering_map, 0, 1)
         # prob = np.stack([edt_prob(lbl[self.b]) for lbl in ys])
@@ -224,7 +224,8 @@ class OptimizedStarDistData2D(StarDistData2D):
                 [edt_prob(lbl[self.b][self.ss_grid[1:3]]) for lbl in ys_cleared]
             )
             dist_mask_bordering = [
-                bordering_pixels(lbl[self.b][self.ss_grid[1:3]]) for lbl in ys_cleared
+                bordering_pixels_2d(lbl[self.b][self.ss_grid[1:3]])
+                for lbl in ys_cleared
             ]
             dist_mask_edt = np.stack(
                 [
@@ -243,7 +244,7 @@ class OptimizedStarDistData2D(StarDistData2D):
                 ]
             )
             dist_mask_bordering = [
-                bordering_pixels(lbl[self.b][self.ss_grid[1:3]]) for lbl in ys
+                bordering_pixels_2d(lbl[self.b][self.ss_grid[1:3]]) for lbl in ys
             ]
             dist_mask_edt = np.stack(
                 [
