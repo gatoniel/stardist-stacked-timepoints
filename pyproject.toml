@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stardist-stacked-timepoints"
-version = "0.0.4"
+version = "0.1.0"
 description = "Stardist Stacked Timepoints"
 authors = ["Niklas Netter <niknett@gmail.com>"]
 license = "MIT"
