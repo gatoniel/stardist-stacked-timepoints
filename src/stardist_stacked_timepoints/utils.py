@@ -4,6 +4,22 @@ import numpy as np
 import numpy.typing as npt
 from edt import edt
 from numba import njit
+from scipy.ndimage import binary_dilation
+from scipy.ndimage import generate_binary_structure
+
+
+def bordering_pixels_arbitrary(lbl):
+    """Slowly calculate the pixels of objects that touch other objects in 2d and 3d."""
+    struct = generate_binary_structure(lbl.ndim, lbl.ndim)
+    mask = lbl > 0
+    lbl_ids = np.unique(lbl[mask])
+    expanded = np.zeros(lbl.shape, dtype=bool)
+    for lbl_id in lbl_ids:
+        mask_ = lbl == lbl_id
+        dilation = binary_dilation(mask_, struct)
+        expanded_ = np.logical_xor(mask_, dilation)
+        expanded = np.logical_or(expanded, expanded_)
+    return np.logical_and(mask, expanded)
 
 
 @njit
